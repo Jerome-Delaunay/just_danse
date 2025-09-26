@@ -12,6 +12,9 @@ from core.visualizer import Visualizer
 from core.audio_player import AudioSyncPlayer
 from core.ecran import Ecran
 
+#from src.extract_landmark import video_to_array, frame_to_row
+from src.features_extraction import FeaturesExtraction
+
 # Hyper parameters
 SOURCE = 0 # webcam index: check using ```ls /dev/video*```
 METHOD = "distance" # Method for calculating the score
@@ -37,6 +40,9 @@ def main():
     reference = VideoHandler(source=REF_VIDEO)
     reference.set_rotation(WEBCAM_ROTATION)
     reference.set_target_size(width=FRAME_WIDTH, height=FRAME_HEIGHT)
+
+    #init feature extraction instance
+    fe = FeaturesExtraction()
 
     audio_player = AudioSyncPlayer(AUDIO_PATH)
 
@@ -108,6 +114,24 @@ def main():
                 ref_frame = last_ref_frame
 
             frame = video.get_frame()
+            # rotated = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+            # rotated = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+            # extract frame information
+            fe.compute_feature_from_frame(frame)
+
+            # Process Frame
+            fall_state, height_drop, significant_drop_state, angles, horizontal_posture_state, fast_downward_state = fe.frame_to_state()
+            visualizer.draw_text(frame, f"Height drop: {height_drop}m", position=(50, 100))
+            visualizer.draw_text(frame, f"Angle: {angles}°", position=(50, 150))
+            visualizer.draw_text(frame, f"Horizontal posture: {horizontal_posture_state}", position=(50, 200))
+            visualizer.draw_text(frame, f"Significant drop: {significant_drop_state}", position=(50, 250))
+            visualizer.draw_text(frame, f"Fast downward: {fast_downward_state}", position=(50, 300))
+            visualizer.draw_text(frame, f"fet.head_y: {fe.get_position()[1,1]}", position=(50, 350))
+
+            if fall_state:
+                print(f"Fall detected!{'' if height_drop < 0 else ' (head first!)'} Height drop: {height_drop}m, Angle: {angles}°, Horizontal: {horizontal_posture_state}, Significant drop: {significant_drop_state}, Fast downward: {fast_downward_state}")
+                print(frame.shape)
+
             if frame is None:
                 break
 
