@@ -121,16 +121,15 @@ def main():
 
             # Process Frame
             fall_state, height_drop, significant_drop_state, angles, horizontal_posture_state, fast_downward_state = fe.frame_to_state()
-            visualizer.draw_text(frame, f"Height drop: {height_drop}m", position=(50, 100))
-            visualizer.draw_text(frame, f"Angle: {angles}°", position=(50, 150))
-            visualizer.draw_text(frame, f"Horizontal posture: {horizontal_posture_state}", position=(50, 200))
-            visualizer.draw_text(frame, f"Significant drop: {significant_drop_state}", position=(50, 250))
-            visualizer.draw_text(frame, f"Fast downward: {fast_downward_state}", position=(50, 300))
-            visualizer.draw_text(frame, f"fet.head_y: {fe.get_position()[1,1]}", position=(50, 350))
+            # visualizer.draw_text(frame, f"Height drop: {height_drop}m", position=(50, 100))
+            # visualizer.draw_text(frame, f"Angle: {angles}°", position=(50, 150))
+            # visualizer.draw_text(frame, f"Horizontal posture: {horizontal_posture_state}", position=(50, 200))
+            # visualizer.draw_text(frame, f"Significant drop: {significant_drop_state}", position=(50, 250))
+            # visualizer.draw_text(frame, f"Fast downward: {fast_downward_state}", position=(50, 300))
+            # visualizer.draw_text(frame, f"fet.head_y: {fe.get_position()[1,1]}", position=(50, 350))
 
             if fall_state:
-                print(f"Fall detected!{'' if height_drop < 0 else ' (head first!)'} Height drop: {height_drop}m, Angle: {angles}°, Horizontal: {horizontal_posture_state}, Significant drop: {significant_drop_state}, Fast downward: {fast_downward_state}")
-                print(frame.shape)
+                visualizer.draw_text(frame, f"CHUTE", position=(100, 100))
 
             if frame is None:
                 break
