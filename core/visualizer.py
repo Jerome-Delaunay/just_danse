@@ -12,8 +12,8 @@ class Visualizer:
                     cv2.FONT_HERSHEY_SIMPLEX, 1.2, (255, 255, 0), 2)
         return frame
     
-    def draw_text(self, frame, text):
-        cv2.putText(frame, text, (50, 50),
+    def draw_text(self, frame, text, position=(50, 50)):
+        cv2.putText(frame, text, position,
                     cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 2)
         return frame
     
